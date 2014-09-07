@@ -26,6 +26,8 @@ class FancyNewFileView extends View
   @detaching: false,
 
   initialize: (serializeState) ->
+    @dirRegex = if path.sep == '/' then /\/$/ else RegExp('\\\\$')
+
     atom.workspaceView.command "fancy-new-file:toggle", => @toggle()
     @miniEditor.setPlaceholderText(path.join('path','to','file.txt'));
 
@@ -124,7 +126,7 @@ class FancyNewFileView extends View
     @getFileList (files) ->
       @renderAutocompleteList files
 
-    if /\/$/.test @miniEditor.getEditor().getText()
+    if @dirRegex.test @miniEditor.getEditor().getText()
       @setMessage 'file-directory-create'
     else
       @setMessage 'file-add'
@@ -151,7 +153,7 @@ class FancyNewFileView extends View
     pathToCreate = path.join(@referenceDir(), relativePath)
 
     try
-      if /\/$/.test(relativePath)
+      if @dirRegex.test(relativePath)
         mkdirp pathToCreate
       else
         atom.open pathsToOpen: [pathToCreate]
