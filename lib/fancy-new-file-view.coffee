@@ -102,7 +102,7 @@ class FancyNewFileView extends View
       updatedPath = ""
       if files?.length is 1
         newPath = path.join(@inputPath(), files[0].name)
-        suffix = if files[0].isDir then '/' else ''
+        suffix = if files[0].isDir then path.sep else ''
 
         @updatePath(newPath + suffix)
 
@@ -186,9 +186,9 @@ class FancyNewFileView extends View
     if atom.config.get 'fancy-new-file.suggestCurrentFilePath'
       activePath = atom.workspace.getActiveEditor()?.getPath()
       if activePath
-        activeDir = path.dirname(activePath) + '/'
+        activeDir = path.dirname(activePath) + path.sep
         suggestedPath = path.relative @referenceDir(), activeDir
-        @miniEditor.getEditor().setText suggestedPath + '/'
+        @miniEditor.getEditor().setText suggestedPath + path.sep
 
   toggle: ->
     if @hasParent()
